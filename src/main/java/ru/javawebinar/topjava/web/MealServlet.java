@@ -31,9 +31,7 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-        Meal meal = repository.get(getId(request));
-        meal.setDescription(request.getParameter("description"));
-        meal.setCalories(Integer.valueOf(request.getParameter("calories")));
+        Meal meal = new Meal(getId(request), LocalDateTime.parse(request.getParameter("date")), request.getParameter("description"), Integer.valueOf(request.getParameter("calories")));
         repository.save(meal);
         response.sendRedirect("meals");
     }
@@ -42,8 +40,6 @@ public class MealServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.debug("redirect to meals");
         // List<MealWithExceed> mealsWithExceeded = MealsUtil.getWithExceeded();
-        List<MealWithExceed> mealsWithExceeded = MealsUtil.getWithExceededCRUD(new ArrayList<>(repository.getAll()));
-        request.setAttribute("meals", mealsWithExceeded);
 
         String action = request.getParameter("action") == null ? "read" : request.getParameter("action");
 
@@ -54,10 +50,9 @@ public class MealServlet extends HttpServlet {
                 response.sendRedirect("meals");
                 break;
             case "read":
+                List<MealWithExceed> mealsWithExceeded = MealsUtil.getWithExceededCRUD(new ArrayList<>(repository.getAll()));
+                request.setAttribute("meals", mealsWithExceeded);
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
-                break;
-            case "update":
-                response.sendRedirect("meals");
                 break;
             case "delete":
                 repository.delete(getId(request));

@@ -35,6 +35,7 @@
                 </td>
                 <form method="post" action="meals">
                     <input type="hidden" name="id" value="${meal.getId()}">
+                    <input type="hidden" name="date" value="${meal.getDateTime()}">
                     <td><input type="text" value="${meal.getDescription()}" size=40 name="description"></td>
                     <td><input type="text" value="${meal.getCalories()}" size=40 name="calories"></td>
                     <td><button type="submit">Update</button></td>

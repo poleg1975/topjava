@@ -5,29 +5,31 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class Meal {
+    private Integer  id;
+
     private final LocalDateTime dateTime;
 
     private String description;
 
     private int calories;
 
-    private static volatile int counter;
-
-    private final int id;
-
     public Meal(LocalDateTime dateTime, String description, int calories) {
+        this(null, dateTime, description, calories);
+    }
+
+    public Meal(Integer id, LocalDateTime dateTime, String description, int calories) {
+        this.id = id;
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
-        this.id = setId();
-    }
-
-    private synchronized static int setId() {
-        return ++counter;
     }
 
     public int getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public LocalDateTime getDateTime() {
@@ -50,12 +52,8 @@ public class Meal {
         return dateTime.toLocalTime();
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setCalories(int calories) {
-        this.calories = calories;
+    public boolean isNew() {
+        return id == null;
     }
 
     @Override
