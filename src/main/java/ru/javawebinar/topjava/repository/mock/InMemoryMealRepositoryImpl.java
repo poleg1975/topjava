@@ -58,17 +58,13 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     }
 
     @Override
-    public List<Meal> getAllFilter(int userId, String dateStart, String dateEnd, String timeStart, String timeEnd) {
+    public List<Meal> getAllFilter(int userId, String dateStart, String dateEnd) {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
         LocalDate dateStartF = LocalDate.parse(dateStart, dateFormatter);
         LocalDate dateEndF = LocalDate.parse(dateEnd, dateFormatter);
 
-        LocalTime timeStartF = timeStart.isEmpty() ? LocalTime.MIN : LocalTime.parse(timeStart, timeFormatter);
-        LocalTime timeEndF = timeEnd.isEmpty() ? LocalTime.MAX : LocalTime.parse(timeEnd, timeFormatter);
-
-        return getAll(userId).stream().filter(d -> DateTimeUtil.isBetweenDate(d.getDate(), dateStartF, dateEndF)).filter(d -> DateTimeUtil.isBetweenDate(d.getDate(), dateStartF, dateEndF)).filter(t -> DateTimeUtil.isBetweenTime(t.getTime(), timeStartF, timeEndF)).collect(Collectors.toList());
+        return getAll(userId).stream().filter(d -> DateTimeUtil.isBetweenDate(d.getDate(), dateStartF, dateEndF)).collect(Collectors.toList());
     }
 
     public List<Meal> getAllTest() {

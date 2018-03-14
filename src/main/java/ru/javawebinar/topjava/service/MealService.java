@@ -14,7 +14,7 @@ public interface MealService {
 
     List<Meal> getAll(int userId);
 
-    List<Meal> getAllFilter(int userId, String dateStart, String dateEnd, String timeStart, String timeEnd);
+    List<Meal> getAllFilter(int userId, String dateStart, String dateEnd);
 
     Meal create(Meal meal, int userId);
 

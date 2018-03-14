@@ -8,8 +8,11 @@ import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealWithExceed;
+import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
@@ -33,8 +36,10 @@ public class MealRestController {
 
     public List<MealWithExceed> getAllFilter(String dateStart, String dateEnd, String timeStart, String timeEnd) {
         log.info("getAll");
-        if ((!dateStart.isEmpty() && !dateEnd.isEmpty()) && (!timeStart.isEmpty() && !timeEnd.isEmpty()))
-            return MealsUtil.getWithExceeded(service.getAllFilter(AuthorizedUser.id(), dateStart, dateEnd, timeStart, timeEnd), AuthorizedUser.getCaloriesPerDay());
+        if ((!dateStart.isEmpty() && !dateEnd.isEmpty()) && (!timeStart.isEmpty() && !timeEnd.isEmpty())) {
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+            return MealsUtil.getFilteredWithExceeded(service.getAllFilter(AuthorizedUser.id(), dateStart, dateEnd), AuthorizedUser.getCaloriesPerDay(), (t -> DateTimeUtil.isBetweenTime(t.getTime(), LocalTime.parse(timeStart, timeFormatter), LocalTime.parse(timeEnd, timeFormatter))));
+        }
         else
             return getAll();
     }

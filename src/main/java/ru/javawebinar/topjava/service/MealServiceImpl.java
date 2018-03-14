@@ -36,8 +36,8 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
-    public List<Meal> getAllFilter(int userId, String dateStart, String dateEnd, String timeStart, String timeEnd) {
-        return repository.getAllFilter(userId, dateStart, dateEnd, timeStart, timeEnd);
+    public List<Meal> getAllFilter(int userId, String dateStart, String dateEnd) {
+        return repository.getAllFilter(userId, dateStart, dateEnd);
     }
 
     @Override
