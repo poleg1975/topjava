@@ -1,0 +1,77 @@
+Index: src/main/webapp/index.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/webapp/index.html	(date 1520798749000)
++++ src/main/webapp/index.html	(date 1520798881004)
+@@ -6,9 +6,13 @@
+ <body>
+ <h3>Проект <a href="https://github.com/JavaWebinar/topjava" target="_blank">Java Enterprise (Topjava)</a></h3>
+ <hr>
+-<ul>
+-    <li><a href="users">Users</a></li>
+-    <li><a href="meals">Meals</a></li>
+-</ul>
++<form method="post" action="users">
++    <b>Meals of&nbsp;</b>
++    <select name="userId">
++        <option value="1">User</option>
++        <option value="2">Admin</option>
++    </select>
++    <button type="submit">Select</button>
++</form>
+ </body>
+ </html>
+Index: src/main/java/ru/javawebinar/topjava/web/UserServlet.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/ru/javawebinar/topjava/web/UserServlet.java	(date 1520798749000)
++++ src/main/java/ru/javawebinar/topjava/web/UserServlet.java	(date 1520798880737)
+@@ -1,6 +1,7 @@
+ package ru.javawebinar.topjava.web;
+ 
+ import org.slf4j.Logger;
++import ru.javawebinar.topjava.AuthorizedUser;
+ 
+ import javax.servlet.ServletException;
+ import javax.servlet.http.HttpServlet;
+@@ -13,6 +14,13 @@
+ public class UserServlet extends HttpServlet {
+     private static final Logger log = getLogger(UserServlet.class);
+ 
++    @Override
++    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
++        int userId = Integer.parseInt(request.getParameter("userId"));
++        AuthorizedUser.setId(userId);
++        response.sendRedirect("meals");
++    }
++
+     @Override
+     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+         log.debug("forward to users");
+Index: src/main/java/ru/javawebinar/topjava/AuthorizedUser.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/ru/javawebinar/topjava/AuthorizedUser.java	(date 1520798749000)
++++ src/main/java/ru/javawebinar/topjava/AuthorizedUser.java	(date 1520798880897)
+@@ -3,9 +3,14 @@
+ import static ru.javawebinar.topjava.util.MealsUtil.DEFAULT_CALORIES_PER_DAY;
+ 
+ public class AuthorizedUser {
++    private static int id = 1;
+ 
+     public static int id() {
+-        return 1;
++        return id;
++    }
++
++    public static void setId(int id) {
++        AuthorizedUser.id = id;
+     }
+ 
+     public static int getCaloriesPerDay() {
