@@ -1,6 +1,11 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.AfterClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +35,44 @@ public class MealServiceTest {
         SLF4JBridgeHandler.install();
     }
 
+    @Rule
+    public MealTestRule rule = new MealTestRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+    private static StringBuilder sbLog = new StringBuilder();
+
+    @Rule
+    public TestWatcher watcher = new TestWatcher() {
+        Long t0;
+        Long t1;
+        Double testTime;
+
+        @Override
+        protected void starting(Description description) {
+            sbLog.append(description.getMethodName());
+            t0 = System.currentTimeMillis();
+        }
+
+        @Override
+        protected void finished(Description description) {
+            t1 = System.currentTimeMillis();
+            testTime = (((double)t1-t0)/1000);
+            sbLog.append(" - ");
+            sbLog.append(testTime);
+            sbLog.append("\n");
+            System.out.println("Time = " + testTime + " sec.");
+        }
+    };
+
     @Autowired
     private MealService service;
+
+    @AfterClass
+    public static void after() {
+        System.out.println("Summary: " + "\n" + sbLog);
+    }
 
     @Test
     public void delete() throws Exception {
@@ -39,8 +80,10 @@ public class MealServiceTest {
         assertMatch(service.getAll(USER_ID), MEAL6, MEAL5, MEAL4, MEAL3, MEAL2);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void deleteNotFound() throws Exception {
+        thrown.expect(NotFoundException.class);
+        thrown.expectMessage("Not found entity with id=" + MEAL1_ID);
         service.delete(MEAL1_ID, 1);
     }
 
