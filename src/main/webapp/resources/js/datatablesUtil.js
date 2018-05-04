@@ -1,3 +1,8 @@
+var startDate = "";
+var startTime = "";
+var endDate = "";
+var endTime = "";
+
 function makeEditable() {
     $(document).ajaxError(function (event, jqXHR, options, jsExc) {
         failNoty(jqXHR);
@@ -6,6 +11,15 @@ function makeEditable() {
     // solve problem with cache in IE: https://stackoverflow.com/a/4303862/548473
     $.ajaxSetup({cache: false});
 }
+
+function setFilter(startDate, endDate, startTime, endTime) {
+    this.startDate = startDate;
+    this.endDate = endDate;
+    this.startTime = startTime;
+    this.endTime = endTime;
+    updateTable();
+}
+
 
 function add() {
     $("#detailsForm").find(":input").val("");
@@ -24,8 +38,23 @@ function deleteRow(id) {
 }
 
 function updateTable() {
-    $.get(ajaxUrl, function (data) {
+    $.get(ajaxUrl + "?startDate=" + startDate + "&startTime=" + startTime + "&endDate=" + endDate + "&endTime=" + endTime, function (data) {
         datatableApi.clear().rows.add(data).draw();
+    });
+}
+
+function userStatus(userId, enabled) {
+    $.ajax({
+        url: ajaxUrl,
+        type: "POST",
+        data: {
+            "id": userId,
+            "enabled": enabled
+        },
+        success: function () {
+            updateTable();
+            successNoty("User Status Updated");
+        }
     });
 }
 
