@@ -25,7 +25,13 @@ $(function () {
         "info": true,
         "columns": [
             {
-                "data": "dateTime"
+                "data": "dateTime",
+                "render": function (date, type, row) {
+                    if (type === "display") {
+                        return date.replace("T", " ");
+                    }
+                    return date;
+                }
             },
             {
                 "data": "description"
@@ -50,6 +56,13 @@ $(function () {
                 "desc"
             ]
         ],
+        "createdRow": function (row, data, dataIndex) {
+            if (data.exceed) {
+                $(row).attr("data-mealExceed", true);
+            } else {
+                $(row).attr("data-mealExceed", false);
+            }
+        },
         "initComplete": makeEditable
     });
 });

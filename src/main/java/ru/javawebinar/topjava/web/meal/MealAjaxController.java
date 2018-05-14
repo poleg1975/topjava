@@ -29,6 +29,12 @@ public class MealAjaxController extends AbstractMealController {
     }
 
     @Override
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Meal get(@PathVariable("id") int id) {
+        return super.get(id);
+    }
+
+    @Override
     @DeleteMapping(value = "/{id}")
     public void delete(@PathVariable("id") int id) {
         super.delete(id);
@@ -51,7 +57,7 @@ public class MealAjaxController extends AbstractMealController {
         if (mealTo.isNew()) {
             super.create(MealsUtil.createNewFromTo(mealTo));
         } else {
-            //super.update(mealTo, mealTo.getId());
+            super.update(mealTo, mealTo.getId());
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }

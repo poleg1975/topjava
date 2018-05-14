@@ -48,4 +48,11 @@ public class MealsUtil {
     public static Meal createNewFromTo(MealTo newMeal) {
         return new Meal(null, newMeal.getDateTime(), newMeal.getDescription(), newMeal.getCalories());
     }
+
+    public static Meal updateFromTo(Meal meal, MealTo mealTo) {
+        meal.setDateTime(mealTo.getDateTime());
+        meal.setDescription(mealTo.getDescription());
+        meal.setCalories(mealTo.getCalories());
+        return meal;
+    }
 }
