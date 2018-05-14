@@ -66,3 +66,18 @@ $(function () {
         "initComplete": makeEditable
     });
 });
+
+jQuery('#startDate, #endDate').datetimepicker({
+    timepicker: false,
+    format: 'Y-m-d',
+    formatDate: 'Y-m-d'
+});
+
+$('#startTime, #endTime').datetimepicker({
+    datepicker: false,
+    format: 'H:i'
+});
+
+$('#dateTime').datetimepicker({
+    format: 'Y-m-d H:i'
+});
